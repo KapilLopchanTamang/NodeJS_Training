@@ -18,4 +18,13 @@ exports.createBlog = async (req, res) => {
     });
   }
 };
+exports,getBlogsById=async(req,res)=>{
+    let result =await blogs.findAll();
+    res.status(200).send(result);
+}
 
+exports.getBlogsById=async(req,res)=>{
+    let result=await blogs.findByPk(req.params.id);
+    res.status(200).send(result);
+}
+exports.deleteBlogsBy
