@@ -1,20 +1,24 @@
-// copied from nojeJs(Express)
-
 const express = require('express');
-const { testFunction, even } = require('./controllers/testController');
-const app = express()
+const { testFunction } = require('./controllers/testController');
+const app = express();
+const db = require('./model/index.js');
 
-const db = require("./model/index.js");
-db.sequelize.sync({ force: false })
-app.get("/", (req, res) => {
-  res.json({
-    message: "hello world from / route",
-  });
+db.sequelize.sync({ force: false }).catch(err => console.log(err));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello world from / route' });
 });
 
-app.get("/aboutus", even)
-let PORT = 3000;
+app.get('/about', testFunction);
 
+const createRoutes = require('./routes/blog.js');
+
+app.use('/api', createRoutes);
+
+const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`server is started in ${PORT}`);
+  console.log(`Server is started on port ${PORT}`);
 });

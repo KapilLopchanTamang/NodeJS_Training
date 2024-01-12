@@ -1,37 +1,22 @@
-const dbConfig = require('../dbConfig/db.js')
-const Sequelize = require("sequelize");
-
-const sequelize = new Sequelize(
-  dbConfig.db,
-  dbConfig.username,
-  dbConfig.password,
-  {
-    host: dbConfig.host,
-    dialect: dbConfig.dialect,
-    pool: {
-      max: dbConfig.pool.max,
-      min: dbConfig.pool.min,
-      accurate: dbConfig.pool.accurate,
-      idle: dbConfig.pool.idle,
-    },
-  }
-);
+const Sequelize = require('sequelize');
+const dbConfig = require('../dbConfig/db.js');
+``
+const sequelize = new Sequelize(dbConfig.db, dbConfig.username, dbConfig.password, {
+  host: dbConfig.host,
+  dialect: dbConfig.dialect,
+  operatorsAliases: false,
+  pool: dbConfig.pool
+});
 
 sequelize
   .authenticate()
-  .then(() => {
-    console.log("connected to database successfully");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+  .then(() => console.log('Connected to database successfully.'))
+  .catch(console.error);
 
-const db = {};
-
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
-
-db.blogs = require("./../model/blog.js")(sequelize, Sequelize);
-
+const db = {
+  Sequelize,
+  sequelize,
+  blogs: require('./blog.js')(sequelize, Sequelize)
+};
 
 module.exports = db;
